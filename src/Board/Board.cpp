@@ -85,6 +85,9 @@ void MakeMovesDir(const Board& board, T& listOrCount, size_t movesBitMask) {
 							Pos(toX, y)
 						};
 						listOrCount.Add(move);
+
+						std::swap(move.to, move.from);
+						listOrCount.Add(move);
 					}
 
 					if (movesBitMask & toMask) {
@@ -92,7 +95,13 @@ void MakeMovesDir(const Board& board, T& listOrCount, size_t movesBitMask) {
 						MakeTripleMove<OPPOSITE_DIRS[DIR], JUST_COUNT, T>(board, to, from, listOrCount);
 					}
 
+					if (movesBitMask & fromMask) {
+						// Triple move
+						MakeTripleMove<DIR, JUST_COUNT, T>(board, from, to, listOrCount);
+					}
+
 					movesBitMask |= fromMask;
+					movesBitMask |= toMask;
 				}
 				
 			}
@@ -125,6 +134,9 @@ void MakeMovesDir(const Board& board, T& listOrCount, size_t movesBitMask) {
 						from, to,
 					};
 					listOrCount.Add(move);
+
+					std::swap(move.to, move.from);
+					listOrCount.Add(move);
 				}
 
 				if (movesBitMask & toMask) {
@@ -132,7 +144,13 @@ void MakeMovesDir(const Board& board, T& listOrCount, size_t movesBitMask) {
 					MakeTripleMove<OPPOSITE_DIRS[DIR], JUST_COUNT, T>(board, to, from, listOrCount);
 				}
 
+				if (movesBitMask & fromMask) {
+					// Triple move
+					MakeTripleMove<DIR, JUST_COUNT, T>(board, from, to, listOrCount);
+				}
+
 				movesBitMask |= fromMask;
+				movesBitMask |= toMask;
 			}
 		}
 	}
@@ -142,18 +160,14 @@ void MakeMovesDir(const Board& board, T& listOrCount, size_t movesBitMask) {
 void Board::MakeMoves(MoveList& moveList) {
 	size_t movesBitMask = 0;
 	MakeMovesDir<DIR_LEFT, false>(*this, moveList, movesBitMask);
-	MakeMovesDir<DIR_RIGHT, false>(*this, moveList, movesBitMask);
 	MakeMovesDir<DIR_UP, false>(*this, moveList, movesBitMask);
-	MakeMovesDir<DIR_DOWN, false>(*this, moveList, movesBitMask);
 }
 
 size_t Board::CountMoves() {
 	size_t count = 0;
 	size_t movesBitMask = 0;
 	MakeMovesDir<DIR_LEFT, true>(*this, count, movesBitMask);
-	MakeMovesDir<DIR_RIGHT, true>(*this, count, movesBitMask);
 	MakeMovesDir<DIR_UP, true>(*this, count, movesBitMask);
-	MakeMovesDir<DIR_DOWN, true>(*this, count, movesBitMask);
 	return count;
 }
 
