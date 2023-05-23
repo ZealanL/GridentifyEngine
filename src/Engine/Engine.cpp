@@ -26,7 +26,7 @@ Value Engine::GetBoardEval(Board& board) {
 		CELL_MULTIPLE_THREE_BONUS = 3;
 
 	Value eval = 0;
-	for (size_t i = BOARD_DIM; i < BOARD_DIM_2; i++) {
+	for (size_t i = 1; i < BOARD_DIM_2; i++) {
 		CellVal cellVal = board.valsFlat[i];
 
 		if (cellVal % 3 == 0) {
@@ -41,7 +41,7 @@ Value Engine::GetBoardEval(Board& board) {
 		}
 
 		// Down neighbour
-		{
+		if (i >= BOARD_DIM) {
 			cellMergeVal += GetNeighbourEval(cellVal, board.valsFlat[i - BOARD_DIM]);
 		}
 
