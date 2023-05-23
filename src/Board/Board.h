@@ -146,7 +146,7 @@ struct Board {
 	}
 
 	void MakeMoves(MoveList& moveList);
-	size_t CountMoves();
+	size_t CountPairs();
 
 	friend std::ostream& operator<<(std::ostream& stream, const Board& board);
 };

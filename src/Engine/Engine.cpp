@@ -7,8 +7,26 @@ void Engine::SetBoard(Board& board) {
 }
 
 Value Engine::GetBoardEval(Board& board) {
+
+	// Based on https://github.com/LHolten/Gridentify/blob/master/test.py#L33
+	constexpr Value CORNER_WEIGHTS[BOARD_DIM_2] = {
+		9, 6, 4, 6, 9,
+		6, 4, 2, 4, 6,
+		4, 2, 1, 2, 4,
+		6, 4, 2, 4, 6,
+		9, 6, 4, 6, 9
+	};
+
+	Value cornerEval = 0;
+	for (size_t i = 0; i < BOARD_DIM_2; i++) {
+		CellVal cellVal = board.valsFlat[i];
+		cornerEval += cellVal * CORNER_WEIGHTS[i] * CORNER_WEIGHTS[i];
+	}
+
+	Value pairCount = board.CountPairs();
+
 	// Use move count as value
-	return board.CountMoves();
+	return (cornerEval * pairCount);
 }
 
 

@@ -88,20 +88,21 @@ void MakeMovesDir(const Board& board, T& listOrCount, size_t movesBitMask) {
 
 						std::swap(move.to, move.from);
 						listOrCount.Add(move);
-					}
 
-					if (movesBitMask & toMask) {
-						// Triple move
-						MakeTripleMove<OPPOSITE_DIRS[DIR], JUST_COUNT, T>(board, to, from, listOrCount);
-					}
 
-					if (movesBitMask & fromMask) {
-						// Triple move
-						MakeTripleMove<DIR, JUST_COUNT, T>(board, from, to, listOrCount);
-					}
+						if (movesBitMask & toMask) {
+							// Triple move
+							MakeTripleMove<OPPOSITE_DIRS[DIR], JUST_COUNT, T>(board, to, from, listOrCount);
+						}
 
-					movesBitMask |= fromMask;
-					movesBitMask |= toMask;
+						if (movesBitMask & fromMask) {
+							// Triple move
+							MakeTripleMove<DIR, JUST_COUNT, T>(board, from, to, listOrCount);
+						}
+
+						movesBitMask |= fromMask;
+						movesBitMask |= toMask;
+					}
 				}
 				
 			}
@@ -137,20 +138,20 @@ void MakeMovesDir(const Board& board, T& listOrCount, size_t movesBitMask) {
 
 					std::swap(move.to, move.from);
 					listOrCount.Add(move);
-				}
 
-				if (movesBitMask & toMask) {
-					// Triple move
-					MakeTripleMove<OPPOSITE_DIRS[DIR], JUST_COUNT, T>(board, to, from, listOrCount);
-				}
+					if (movesBitMask & toMask) {
+						// Triple move
+						MakeTripleMove<OPPOSITE_DIRS[DIR], JUST_COUNT, T>(board, to, from, listOrCount);
+					}
 
-				if (movesBitMask & fromMask) {
-					// Triple move
-					MakeTripleMove<DIR, JUST_COUNT, T>(board, from, to, listOrCount);
-				}
+					if (movesBitMask & fromMask) {
+						// Triple move
+						MakeTripleMove<DIR, JUST_COUNT, T>(board, from, to, listOrCount);
+					}
 
-				movesBitMask |= fromMask;
-				movesBitMask |= toMask;
+					movesBitMask |= fromMask;
+					movesBitMask |= toMask;
+				}
 			}
 		}
 	}
@@ -163,7 +164,7 @@ void Board::MakeMoves(MoveList& moveList) {
 	MakeMovesDir<DIR_UP, false>(*this, moveList, movesBitMask);
 }
 
-size_t Board::CountMoves() {
+size_t Board::CountPairs() {
 	size_t count = 0;
 	size_t movesBitMask = 0;
 	MakeMovesDir<DIR_LEFT, true>(*this, count, movesBitMask);
