@@ -8,8 +8,8 @@ void Engine::SetBoard(Board& board) {
 
 FINLINE Value GetNeighbourEval(CellVal a, CellVal b) {
 	constexpr Value
-		CELL_SAME_VAL = 8,
-		CELL_HALF_VAL = 2;
+		CELL_SAME_VAL = 16,
+		CELL_HALF_VAL = 5;
 
 	if (a == b) {
 		return CELL_SAME_VAL;
