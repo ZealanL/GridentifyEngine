@@ -6,27 +6,42 @@ void Engine::SetBoard(Board& board) {
 	g_Board = board;
 }
 
+FINLINE Value GetNeighbourEval(CellVal a, CellVal b) {
+	constexpr Value
+		CELL_SAME_VAL = 8,
+		CELL_HALF_VAL = 2;
+
+	if (a == b) {
+		return CELL_SAME_VAL;
+	} else if (a == (b / 2) || b == (a / 2)) {
+		return CELL_HALF_VAL;
+	} else {
+		return 0;
+	}
+}
+
 Value Engine::GetBoardEval(Board& board) {
 
-	// Based on https://github.com/LHolten/Gridentify/blob/master/test.py#L33
-	constexpr Value CORNER_WEIGHTS[BOARD_DIM_2] = {
-		9, 6, 4, 6, 9,
-		6, 4, 2, 4, 6,
-		4, 2, 1, 2, 4,
-		6, 4, 2, 4, 6,
-		9, 6, 4, 6, 9
-	};
-
-	Value cornerEval = 0;
-	for (size_t i = 0; i < BOARD_DIM_2; i++) {
+	Value eval = 0;
+	for (size_t i = BOARD_DIM; i < BOARD_DIM_2; i++) {
 		CellVal cellVal = board.valsFlat[i];
-		cornerEval += cellVal * CORNER_WEIGHTS[i] * CORNER_WEIGHTS[i];
+
+		CellVal cellMergeVal = 0;
+
+		// Left neighbour
+		if (i % BOARD_DIM != 0) {
+			cellMergeVal += GetNeighbourEval(cellVal, board.valsFlat[i - 1]);
+		}
+
+		// Down neighbour
+		{
+			cellMergeVal += GetNeighbourEval(cellVal, board.valsFlat[i - BOARD_DIM]);
+		}
+
+		eval += cellMergeVal;
 	}
 
-	Value pairCount = board.CountPairs();
-
-	// Use move count as value
-	return (cornerEval * pairCount);
+	return eval;
 }
 
 
