@@ -22,9 +22,16 @@ FINLINE Value GetNeighbourEval(CellVal a, CellVal b) {
 
 Value Engine::GetBoardEval(Board& board) {
 
+	constexpr Value
+		CELL_MULTIPLE_THREE_BONUS = 3;
+
 	Value eval = 0;
 	for (size_t i = BOARD_DIM; i < BOARD_DIM_2; i++) {
 		CellVal cellVal = board.valsFlat[i];
+
+		if (cellVal % 3 == 0) {
+			eval += CELL_MULTIPLE_THREE_BONUS;
+		}
 
 		CellVal cellMergeVal = 0;
 
