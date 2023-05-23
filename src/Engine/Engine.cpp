@@ -87,7 +87,7 @@ Value SearchRecursive(Board& board, size_t depthRemaining, size_t& totalLeafNode
 
 						sumEval = MIN(sumEval, eval);
 #else
-						sumEval += eval;
+						sumEval += eval / 3;
 #endif
 					}
 				}
